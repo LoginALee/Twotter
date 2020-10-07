@@ -2,16 +2,30 @@
     <div class="user-profile">
         <div class="user-profile__user-panel">
             <h1 class="user-profile__username">@{{ user.username }}</h1>
+            <div class="user-profile__admin-badge" v-if="user.isAdmin">Admin</div>
             <div class="user-profile__follower-count">
                 <strong>Followers: </strong> {{ followers }}
             </div>
+        </div>
+        <div class="user-profile__twoots-wrapper">
+            <TwootItem 
+            v-for="twoot in user.twoots" 
+            :key="twoot.id" 
+            :username="user.username" 
+            :twoot="twoot" 
+            @favourite="toggleFavourite"
+            />
         </div>
     </div>
 </template>
 
 <script>
+import TwootItem from './TwootItem';
+
 export default {
   name: 'UserProfile',
+  components: { TwootItem },
+
   data(){
     return{
       followers: 0,
@@ -21,7 +35,17 @@ export default {
         firstName: 'Alejandro',
         lastName: 'Tinoco',
         email: 'admin123@gmail.com',
-        isAdmin: true
+        isAdmin: true,
+        twoots: [
+            {
+                id: 1,
+                content: "Twotter is better than Twitter"
+            },
+            {
+                id: 2,
+                content: "Whooosh now youre happy"
+            }
+        ]
       }
     }
   },
@@ -44,6 +68,10 @@ export default {
   methods: {
     followUser(){
       this.followers++;
+    },
+
+    toggleFavourite(id){
+        console.log(`Favourited Twoot #${id}`)
     }
   },
 
@@ -70,4 +98,14 @@ export default {
     border-radius: 5px;
     border: 1px solid #DFE3E8;
 }
+
+.user-profile__admin-badge{
+    background: rebeccapurple;
+    color: white;
+    border-radius: 5px;
+    margin-right: auto;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
 </style>
