@@ -6,6 +6,20 @@
             <div class="user-profile__follower-count">
                 <strong>Followers: </strong> {{ followers }}
             </div>
+            <form class="user-profile__create-twoot" @submit.prevent="createNewTwoot">
+              <label for="newTwoot"><strong>New Twoot</strong></label>
+              <textarea name="" id="newTwoot" cols="30" rows="4" v-model="newTwootContent"></textarea>
+
+              <div class="user-profile__create-twoot-type">
+                <label for="newTwootType"><strong>Type: </strong></label>
+                <select id="newTwootType" v-model="selectedTwootType">
+                  <option :value="option.value" v-for="(option, index) in twootTypes" v-bind:key="index">
+                    {{  option.name }}
+                  </option>
+                </select>
+              </div>
+              <button>Twoot!</button>
+            </form>
         </div>
         <div class="user-profile__twoots-wrapper">
             <TwootItem 
@@ -28,6 +42,18 @@ export default {
 
   data(){
     return{
+      newTwootContent: '',
+      selectedTwootType: 'instant',
+      twootTypes: [
+        {
+          value: 'draft',
+          name: 'Draft'
+        },
+        {
+          value: 'instant',
+          name: 'Instant Twoot'
+        }
+      ],
       followers: 0,
       user: {
         id: 1,
@@ -72,6 +98,16 @@ export default {
 
     toggleFavourite(id){
         console.log(`Favourited Twoot #${id}`)
+    },
+
+    createNewTwoot(){
+      if(this.newTwootContent && this.selectedTwootType !== 'draft'){
+        this.user.twoots.unshift({
+          id: this.user.twoots.length + 1,
+          content: this.newTwootContent
+        })
+        this.newTwootContent = '';
+      }
     }
   },
 
@@ -106,6 +142,22 @@ export default {
     margin-right: auto;
     padding: 0 10px;
     font-weight: bold;
+    margin-top: 10px;
+}
+
+h1{
+  margin: 0;
+}
+
+.user-profile__twoots-wrapper{
+  display: grid;
+  grid-gap: 10px;
+}
+
+.user-profile__create-twoot{
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 </style>
